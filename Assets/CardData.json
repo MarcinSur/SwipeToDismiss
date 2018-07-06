@@ -1,0 +1,18 @@
+[
+    {
+      "textToShow": "card1",
+      "goodAnswearPoints": 1
+    },
+	{
+      "textToShow": "card2",
+      "goodAnswearPoints": 2
+    },
+	{
+      "textToShow": "card3",
+      "goodAnswearPoints": 3
+    },
+	{
+      "textToShow": "card4",
+      "goodAnswearPoints": 4
+    }
+]
