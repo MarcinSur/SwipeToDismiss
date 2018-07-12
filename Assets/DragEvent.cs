@@ -4,6 +4,6 @@ using UnityEngine;
 using UnityEngine.Events;
 
 [System.Serializable]
-public class DragEvent : UnityEvent<float> {
+public class DragEvent : UnityEvent<Vector3> {
 
 }

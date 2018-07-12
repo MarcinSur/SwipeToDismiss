@@ -8,7 +8,7 @@ public class CardStack : MonoBehaviour
     public RectTransform parentCardPrefab;
     public GameObject cardPrefab;
     public List<CardData> dataCards = new List<CardData>();
-    public List<CardController> controllerCards = new List<CardController>();
+    //public List<CardController> controllerCards = new List<CardController>();
     public CardRepository cardRepository;
 
     private GameObject currentCard;
@@ -34,7 +34,7 @@ public class CardStack : MonoBehaviour
             return;
 
         currentCard = Instantiate(cardPrefab, parentCardPrefab);
-        currentCard.GetComponent<CardController>().SetCard(dataCards[0]);
+        //currentCard.GetComponent<CardController>().SetCard(dataCards[0]);
         currentCard.GetComponent<Drag>().onRightCompleted.AddListener(cardRight);
         currentCard.GetComponent<Drag>().onLeftCompleted.AddListener(cardLeft);
         dragSystem.Init(currentCard.GetComponent<RectTransform>());
