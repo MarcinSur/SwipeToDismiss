@@ -7,6 +7,7 @@ using UnityEngine.UI;
 
 public class DragTransform : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHandler
 {
+    public Transform target;
     public DragState dragState;
     public UnityEvent onRightCompleted;
     public UnityEvent onLeftCompleted;
@@ -26,6 +27,11 @@ public class DragTransform : MonoBehaviour, IBeginDragHandler, IDragHandler, IEn
     void Start()
     {
         dragState = DragState.NONE;
+
+        if(target == null)
+        {
+            target = transform;
+        }
     }
 
     public void OnBeginDrag(PointerEventData eventData)
@@ -34,13 +40,13 @@ public class DragTransform : MonoBehaviour, IBeginDragHandler, IDragHandler, IEn
         dragState = DragState.MIDDLE;
 
         startDragPos = eventData.position;
-        offSet = transform.position - eventData.pointerCurrentRaycast.worldPosition;
+        offSet = target.position - eventData.pointerCurrentRaycast.worldPosition;
         SetDraggedPosition(eventData);
     }
 
     public void OnDrag(PointerEventData eventData)
     {
-        if (eventData.pointerCurrentRaycast.gameObject != null && eventData.pointerCurrentRaycast.gameObject.transform != transform)
+        if (eventData.pointerCurrentRaycast.gameObject != null && eventData.pointerCurrentRaycast.gameObject.transform != target)
         {
             OnEndDrag(eventData);
             return;
@@ -77,7 +83,7 @@ public class DragTransform : MonoBehaviour, IBeginDragHandler, IDragHandler, IEn
     void SetDraggedPosition(PointerEventData eventData)
     {
         Vector3 rotateEulers;
-        rotateEulers = new Vector3(0, 0, Mathf.RoundToInt(transform.rotation.z - deltaX/100));
+        rotateEulers = new Vector3(0, 0, Mathf.RoundToInt(target.rotation.z - deltaX/100));
         if (rotateEulers.z >= 8)
         {
             rotateEulers.z = 8;
@@ -86,14 +92,14 @@ public class DragTransform : MonoBehaviour, IBeginDragHandler, IDragHandler, IEn
         {
             rotateEulers.z = -8;
         }
-        transform.position = eventData.pointerCurrentRaycast.worldPosition + offSet; 
-        transform.eulerAngles = rotateEulers;
+        target.position = eventData.pointerCurrentRaycast.worldPosition + offSet; 
+        target.eulerAngles = rotateEulers;
     }
 
     Vector3 viewPos;
     void CalculateSwipeDirection(float delta)
     {
-        viewPos = Camera.main.WorldToViewportPoint(transform.position);
+        viewPos = Camera.main.WorldToViewportPoint(target.position);
         if (viewPos.x > .6f)
         {
             dragState = DragState.RIGHT;
