@@ -187,8 +187,6 @@ MonoBehaviour:
     m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
       Culture=neutral, PublicKeyToken=null
   offSet: {x: 0, y: 0}
-  maxDistance: 1080
-  normalizeValueX: 0
   startPos: {x: 0, y: 0}
 --- !u!114 &196277457
 MonoBehaviour:
@@ -1036,10 +1034,19 @@ Prefab:
     - target: {fileID: 8633865683469960374, guid: 36538c02b72b92c43b0f0d190f9ebd12,
         type: 2}
       propertyPath: m_Enabled
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1078931757572086, guid: 36538c02b72b92c43b0f0d190f9ebd12, type: 2}
       propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1366724559194310, guid: 36538c02b72b92c43b0f0d190f9ebd12, type: 2}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8633865680945916982, guid: 36538c02b72b92c43b0f0d190f9ebd12,
+        type: 2}
+      propertyPath: m_Enabled
       value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
