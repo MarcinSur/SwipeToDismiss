@@ -1,7 +1,9 @@
 ﻿using UnityEngine;
 
-public class Condition : ScriptableObject{
-    public string description;
-    public bool satisfied;
-    public int hash;
+[System.Serializable]
+public class Condition : ScriptableObject, ICondition
+{
+    public string Desription { get; set; }
+    public bool Satisfied { get; set; }
+    public int Hash { get; set; }
 }

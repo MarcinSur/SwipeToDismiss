@@ -5,51 +5,47 @@ using UnityEngine.Events;
 
 public class Swipe : MonoBehaviour
 {
+
+    private float _maxDistanceWidth;
+    private float _maxDistanceHeight;
+    private float _normalizeValueX;
+    private float _normalizeValueY;
+    [SerializeField]
+    private Vector2 _startPos;
+    private Vector2 _mousePosition;
+
     public bool enableSwipe;
     public float swipeDetectionLimitLeftRight;
     public float swipeDetectionLimitUpDown;
-    public UnityEvent swipedLeft;
+    public Vector2 offSet;
+
+    public delegate void SwipeLeft();
+    public static event SwipeLeft OnSwipeLeft;
+
+    //public UnityEvent swipedLeft;
     public UnityEvent swipedRight;
     public UnityEvent swipedUp;
     public UnityEvent swipedDown;
     public UnityEvent drag;
-    public Vector2 offSet;
-    private float maxDistanceWidth;
-    private float maxDistanceHeight;
-    private float normalizeValueX;
-    private float normalizeValueY;
-
-    [SerializeField]
-    private Vector2 startPos;
-    private Vector2 mousePosition;
 
     private void Start()
     {
-        maxDistanceWidth = Screen.width;
-        maxDistanceHeight = Screen.height;
+        _maxDistanceWidth = Screen.width;
+        _maxDistanceHeight = Screen.height;
     }
 
     void Update()
     {
         if (!enableSwipe)
+        {
             return;
+        }
 
 #if UNITY_STANDALONE || UNITY_EDITOR
-        if (Input.GetMouseButtonDown(0))
-            startPos = Input.mousePosition;
 
-        if (Input.GetMouseButton(0))
-        {
-            mousePosition = Input.mousePosition;
-            offSet = mousePosition - startPos;
-            normalizeValueX = mousePosition.x / maxDistanceWidth;
-            normalizeValueY = mousePosition.y / maxDistanceHeight;
-            drag.Invoke();
-        }
-        if (Input.GetMouseButtonUp(0))
-        {
-            CalculateSwipeDirectionUsingPixel();
-        }
+        StartDrag();
+        Drag();
+        EndDrag();
 
 #elif UNITY_ANDROID || UNITY_IOS
         if (Input.touchCount > 0)
@@ -80,27 +76,56 @@ public class Swipe : MonoBehaviour
 #endif
     }
 
-    private void CalculateSwipeDirectionUsingNormalizedFloat()
+    private void EndDrag()
     {
-        if (normalizeValueX > swipeDetectionLimitLeftRight)
+        if (Input.GetMouseButtonUp(0))
+        {
+            CompareSwipeDirectionUsingPixel();
+        }
+    }
+
+    private void Drag()
+    {
+        if (Input.GetMouseButton(0))
+        {
+            _mousePosition = Input.mousePosition;
+            offSet = _mousePosition - _startPos;
+            _normalizeValueX = _mousePosition.x / _maxDistanceWidth;
+            _normalizeValueY = _mousePosition.y / _maxDistanceHeight;
+            drag.Invoke();
+        }
+    }
+
+    private void StartDrag()
+    {
+        if (Input.GetMouseButtonDown(0))
+        {
+            _startPos = Input.mousePosition;
+        }
+    }
+
+    private void CompareNormalizedFloatToSwipeDirection()
+    {
+        if (_normalizeValueX > swipeDetectionLimitLeftRight)
         {
             swipedRight.Invoke();
         }
-        if (normalizeValueX < -swipeDetectionLimitLeftRight)
+        if (_normalizeValueX < -swipeDetectionLimitLeftRight)
         {
-            swipedLeft.Invoke();
+            //swipedLeft.Invoke();
+            OnSwipeLeft?.Invoke();
         }
-        if (normalizeValueY > swipeDetectionLimitUpDown)
+        if (_normalizeValueY > swipeDetectionLimitUpDown)
         {
             swipedUp.Invoke();
         }
-        if (normalizeValueY < -swipeDetectionLimitUpDown)
+        if (_normalizeValueY < -swipeDetectionLimitUpDown)
         {
             swipedDown.Invoke();
         }
     }
 
-    private void CalculateSwipeDirectionUsingPixel()
+    private void CompareSwipeDirectionUsingPixel()
     {
         if (offSet.x > swipeDetectionLimitLeftRight)
         {
@@ -108,7 +133,8 @@ public class Swipe : MonoBehaviour
         }
         if (offSet.x < -swipeDetectionLimitLeftRight)
         {
-            swipedLeft.Invoke();
+            //swipedLeft.Invoke();
+            OnSwipeLeft?.Invoke();
         }
         if (offSet.y > swipeDetectionLimitUpDown)
         {

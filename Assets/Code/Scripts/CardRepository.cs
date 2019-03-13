@@ -8,6 +8,6 @@ public class CardRepository : MonoBehaviour {
     public TextAsset jsonData;
 
     // TO DO 
-    // load data from local
-    // load data from web
+    // Check if you want download from text file or internet
+
 }

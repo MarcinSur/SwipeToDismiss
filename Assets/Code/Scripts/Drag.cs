@@ -40,6 +40,7 @@ public class Drag : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHand
     {
         this.rectTransformToDrag = rectTransform;
         dragState = DragState.NONE;
+        onMiddleCompleted.AddListener(rectTransform.GetComponent<Animation>().BackToCenter);
     }
 
     public void OnBeginDrag(PointerEventData eventData)
@@ -101,15 +102,16 @@ public class Drag : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHand
         if (screenToViewportPoint.x > .6f)
         {
             dragState = DragState.RIGHT;
+            return;
         }
-        else if (screenToViewportPoint.x < .4f)
+        if (screenToViewportPoint.x < .4f)
         {
             dragState = DragState.LEFT;
+            return;
         }
-        else
-        {
-            dragState = DragState.MIDDLE;
-        }
+
+        dragState = DragState.MIDDLE;
+
     }
 
     void RotateAndDrag(PointerEventData eventData)
@@ -119,7 +121,7 @@ public class Drag : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHand
 
         if (RectTransformUtility.ScreenPointToWorldPointInRectangle(rectTransformToDrag, eventData.position, eventData.pressEventCamera, out globalMousePosition))
         {
-            rotateEulers = new Vector3(0, 0, Mathf.RoundToInt(rectTransformToDrag.rotation.z - (deltaValue.x/30)));
+            rotateEulers = new Vector3(0, 0, Mathf.RoundToInt(rectTransformToDrag.rotation.z - (deltaValue.x / 30)));
 
             if (rotateEulers.z >= 8)
             {

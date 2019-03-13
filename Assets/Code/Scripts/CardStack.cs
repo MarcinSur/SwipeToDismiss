@@ -6,7 +6,7 @@ using System;
 
 public class CardStack : MonoBehaviour
 {
-    public Swipe swipeSystem;
+    public IDragSwipe swipeSystem = new TestSwipe();
     public GameObject prefab;
     public List<CardData> dataCards = new List<CardData>();
     public List<CardController> controllerCards = new List<CardController>();
@@ -14,12 +14,24 @@ public class CardStack : MonoBehaviour
     private GameObject mCurrentStackElement;
     private CardController mCurrentCardController;
 
+    private void OnEnable()
+    {
+        swipeSystem = gameObject.GetComponent<TestSwipe>();
+        swipeSystem.SwipeLeftEvent += MovedLeft;
+        swipeSystem.SwipeRightEvent += MovedRight;
+        swipeSystem.SwipeCanceledEvent += BackToCenter;
+    }
+
+    private void OnDisable()
+    {
+        swipeSystem.SwipeLeftEvent -= MovedLeft;
+        swipeSystem.SwipeRightEvent -= MovedRight;
+        swipeSystem.DragEvent -= MovingCard;
+        swipeSystem.SwipeCanceledEvent -= BackToCenter;
+    }
+
     private void Start()
     {
-        swipeSystem = gameObject.GetComponent<Swipe>();
-        swipeSystem.swipedLeft.AddListener(MovedLeft);
-        swipeSystem.swipedRight.AddListener(MovedRight);
-        swipeSystem.drag.AddListener(Drag);
         LoadCards();
     }
 
@@ -42,7 +54,9 @@ public class CardStack : MonoBehaviour
         mCurrentCardController = mCurrentStackElement.GetComponent<CardController>();
         
         mCurrentCardController.SetupCard(dataCards[0]);
-        swipeSystem.enableSwipe = true;
+        swipeSystem.DragEvent += MovingCard;
+
+        //swipeSystem.enableSwipe = true;
     }
 
     public void DestroyCard(GameObject card)
@@ -52,21 +66,25 @@ public class CardStack : MonoBehaviour
         Destroy(mCurrentStackElement);
     }
 
-    public void Drag()
+    public void MovingCard(object sender, DragArgs e)
     {
-       // mCurrentCardController.PlayAnimationUsingOffSet(Swipe.offSet);
+       mCurrentCardController.PlayAnimationUsingOffSet(e.drag);
+
     }
 
-    public void MovedRight()
+    public void MovedRight(object sender, EventArgs e)
     {
         Debug.Log("CARD RIGHT");
-        mCurrentCardController.RightAnswear();
     }
 
-    public void MovedLeft()
+    public void MovedLeft(object sender, EventArgs e)
     {
-        Debug.Log("CARD Left");
-        mCurrentCardController.LeftAnswear();
+        Debug.Log("CARD Left distance  ");
+    }
+
+    public void BackToCenter(object sender, EventArgs e)
+    {
+        Debug.Log("Center  ");
     }
 }
 

@@ -1,5 +1,6 @@
 ﻿using System;
 using UnityEngine;
+using DG.Tweening;
 
 public class CardController : MonoBehaviour
 {
@@ -15,14 +16,21 @@ public class CardController : MonoBehaviour
 
     public void RightAnswear()
     {
+
     }
 
     public void LeftAnswear()
     {
+
     }
 
-    public void PlayAnimationUsingOffSet(Vector2 offset)
+    public void PlayAnimationBackToCenter()
     {
-        //TODO Card Animation set value offset .x
+    }
+
+    public void PlayAnimationUsingOffSet(Vector2 movingVector)
+    {
+        transform.DORotate(new Vector3(0, 0, -movingVector.x), 0);
+        transform.DOLocalMoveX(movingVector.x, 0);
     }
 }
