@@ -54,18 +54,18 @@ public class Swipe : MonoBehaviour
             switch (touch.phase)
             {
                 case TouchPhase.Began:
-                    startPos = touch.position;
+                    _startPos = touch.position;
                     break;
                 case TouchPhase.Moved:
-                    offSet = touch.position - startPos;
-                    normalizeValueX = touch.position.x / maxDistanceWidth;
-                    normalizeValueY = touch.position.y / maxDistanceHeight;
+                    offSet = touch.position - _startPos;
+                    _normalizeValueX = touch.position.x / _maxDistanceWidth;
+                    _normalizeValueY = touch.position.y / _maxDistanceHeight;
                     drag.Invoke();
                     break;
                 case TouchPhase.Stationary:
                     break;
                 case TouchPhase.Ended:
-                    CalculateSwipeDirectionUsingPixel();
+                    CompareSwipeDirectionUsingPixel();
                     break;
                 case TouchPhase.Canceled:
                     break;
